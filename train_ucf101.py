@@ -66,12 +66,15 @@ def ImageSeqToMatrix(dirName, num, data_shape):
     mat = []
     
     for i in range(len(ret)):
-        img = cv2.imread(ret[i])
+        img = cv2.imread(ret[i], cv2.IMREAD_COLOR)
 	#img = img.resize(data_shape[2],data_shape[3])
         b,g,r = cv2.split(img)
 	r = cv2.resize(r, (data_shape[3], data_shape[2]))
 	g = cv2.resize(g, (data_shape[3], data_shape[2]))
 	b = cv2.resize(b, (data_shape[3], data_shape[2]))
+	r = np.multiply(r, 1/255.0)
+	g = np.multiply(g, 1/255.0)
+	b = np.multiply(b, 1/255.0)
 	r_1.append(r)
 	g_1.append(g)
 	b_1.append(b)
