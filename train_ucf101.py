@@ -37,6 +37,7 @@ def readData(FileName):
     data_3 = []
     f = open(FileName,'r')
     total = f.readlines()
+    random.shuffle(total)
 
     for eachLine in range(len(total)):
         tmp = total[eachLine].split('\n')
