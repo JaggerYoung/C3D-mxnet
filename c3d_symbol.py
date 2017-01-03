@@ -53,11 +53,13 @@ def get_symbol(num_classes):
     ## 6th group
     fc6 = mx.symbol.FullyConnected(data=pool5b, num_hidden=2048)
     relu6 = mx.symbol.Activation(data=fc6, act_type='relu')
-    fc7 = mx.symbol.FullyConnected(data=relu6, num_hidden=2048)
+    drop6 = mx.symbol.Dropout(data=relu6, p=0.5)
+    fc7 = mx.symbol.FullyConnected(data=drop6, num_hidden=2048)
     relu7 = mx.symbol.Activation(data=fc7, act_type='relu')
+    drop7 = mx.symbol.Dropout(data=relu7, p=0.5)
 
     #Loss
-    fc8 = mx.symbol.FullyConnected(data=relu7, num_hidden=num_classes)
+    fc8 = mx.symbol.FullyConnected(data=drop7, num_hidden=num_classes)
     softmax = mx.symbol.SoftmaxOutput(data=fc8, label=label, name='softmax')
     return softmax
 
