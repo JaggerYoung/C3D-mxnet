@@ -156,7 +156,7 @@ if __name__ == '__main__':
                                  symbol        = network,
                                  num_epoch     = 100,
                                  learning_rate = 0.003,
-                                 momentum      = 0.9,
+                                 momentum      = 0.009,
                                  wd            = 0.005,
                                  initializer   = mx.init.Xavier(factor_type="in", magnitude=2.34))
     
