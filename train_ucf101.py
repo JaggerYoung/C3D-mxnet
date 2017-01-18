@@ -10,7 +10,7 @@ import glob
 
 from c3d_symbol import get_symbol
 
-BATCH_SIZE = 15
+BATCH_SIZE = 10
 NUM_SAMPLES = 28
 
 class SimpleBatch(object):
@@ -37,22 +37,24 @@ def readData(FileName):
     data_3 = []
     f = open(FileName,'r')
     total = f.readlines()
+    print len(total)
     random.shuffle(total)
 
     for eachLine in range(len(total)):
         tmp = total[eachLine].split('\n')
-        tmp_1,tmp_2,tmp_3 = tmp[0].split(' ',2)
-        tmp_1 = '/home/yzg/UCF-101'+tmp_1
+        tmp_1,tmp_2 = tmp[0].split(' ',1)
+        tmp_1 = '/data/zhigang.yang/UCF-101'+tmp_1
 	data_1.append(tmp_1)
-        data_2.append(tmp_2)
-        data_3.append(tmp_3)
+        data_2.append(int(tmp_2))
+        #data_3.append(tmp_3)
     f.close()
     #print data_1
-    return (data_1, data_2, data_3)
+    return (data_1, data_2)
 
 def ImageSeqToMatrix(dirName, num, data_shape):
     pic = []
-    for filename in glob.glob(dirName+'*.jpg'):
+    #print dirName
+    for filename in glob.glob(dirName+'/*.jpg'):
         pic.append(filename)
     #print len(pic)
     ret = []
@@ -91,7 +93,7 @@ class UCFIter(mx.io.DataIter):
         self.fname = fname
         self.data_shape = data_shape
         self.count = num/batch_size
-        (self.data_1, self.data_2, self.data_3) = readData(fname)
+        (self.data_1, self.data_2) = readData(fname)
         
 	self.provide_data = [('data', (batch_size,) + data_shape)]
         self.provide_label = [('label', (batch_size, ))]
@@ -105,7 +107,7 @@ class UCFIter(mx.io.DataIter):
                 idx = k * batch_size + i
                 pic = ImageSeqToMatrix(self.data_1[idx], NUM_SAMPLES, self.data_shape)
 		data.append(pic)
-		label.append(int(self.data_3[idx]))
+		label.append(int(self.data_2[idx]))
 	    
 	    data_all = [mx.nd.array(data)]
 	    label_all = [mx.nd.array(label)]
@@ -131,8 +133,8 @@ def Accuracy(label, pred):
 
 if __name__ == '__main__':
 
-    train_num = 107258
-    test_num = 41822
+    train_num = 9537
+    test_num = 3783
 
     #train_num = 1820
     #test_num = 831
@@ -144,8 +146,8 @@ if __name__ == '__main__':
     devs = [mx.context.gpu(0)]
     network = get_symbol(num_label)    
     
-    train_file = '/home/yzg/mxnet/example/C3D_UCF101/data/train.lst'
-    test_file = '/home/yzg/mxnet/example/C3D_UCF101/data/test.lst'
+    train_file = '/home/users/zhigang.yang/mxnet/example/C3D-mxnet/data/train.list'
+    test_file = '/home/users/zhigang.yang/mxnet/example/C3D-mxnet/data/test.list'
 
     data_train = UCFIter(train_file, train_num, batch_size, data_shape)
     data_val = UCFIter(test_file, test_num, batch_size, data_shape)
