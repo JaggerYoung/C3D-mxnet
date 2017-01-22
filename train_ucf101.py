@@ -56,6 +56,7 @@ def ImageSeqToMatrix(dirName, num, data_shape):
     #print dirName
     for filename in glob.glob(dirName+'/*.jpg'):
         pic.append(filename)
+    pic.sort()
     #print len(pic)
     ret = []
     len_pic = len(pic)
@@ -143,7 +144,7 @@ if __name__ == '__main__':
     data_shape = (3, NUM_SAMPLES, 122, 122)
     num_label = 101
         
-    devs = [mx.context.gpu(0)]
+    devs = [mx.context.gpu(3)]
     network = get_symbol(num_label)    
     
     train_file = '/home/users/zhigang.yang/mxnet/example/C3D-mxnet/data/train.list'
