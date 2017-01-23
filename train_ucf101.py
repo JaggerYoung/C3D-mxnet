@@ -98,7 +98,7 @@ class UCFIter(mx.io.DataIter):
         
 	self.provide_data = [('data', (batch_size,) + data_shape)]
         self.provide_label = [('label', (batch_size, ))]
-        print len(self.data_1)       
+        #print len(self.data_1)       
  
     def __iter__(self):
         for k in range(self.count):
@@ -157,9 +157,9 @@ if __name__ == '__main__':
    
     model = mx.model.FeedForward(ctx           = devs,
                                  symbol        = network,
-                                 num_epoch     = 100,
+                                 num_epoch     = 500,
                                  learning_rate = 0.003,
-                                 momentum      = 0.009,
+                                 momentum      = 0.9,
                                  wd            = 0.005,
                                  initializer   = mx.init.Xavier(factor_type="in", magnitude=2.34))
     
